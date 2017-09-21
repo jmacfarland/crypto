@@ -1,15 +1,29 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace crypto
 {
     class Analysis
     {
         private static string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        
+        private static string quadgramsPath = "C:\\Users\\JMacfarland\\crypto\\resources\\english_quadgrams.txt";
+        private static List<KeyValuePair<string, int>> quadgrams;
+
+        public Analysis()
+        {
+            getQuadgrams();
+        }
+
+        //Initializes the quadgrams list with key value pairs of a quadgram with its frequency
+        private void getQuadgrams()
+        {
+            using (StreamReader sr = File.OpenText(quadgramsPath))
+            {
+                
+            }
+        }
+
         public static int[] getNumLetterOccurrences(string text)
         {
             int[] frequency = new int[26];
