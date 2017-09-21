@@ -12,7 +12,7 @@ namespace crypto
             string cipherText = sc.encode(plainText);
             string newPlain = sc.decode(cipherText);
 
-            var frequency = FrequencyAnalysis.printNumLetterOccurrences(cipherText);
+            var frequency = Analysis.printNumLetterOccurrences(cipherText);
         }
     }
 }

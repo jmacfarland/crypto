@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace crypto
 {
-    class FrequencyAnalysis
+    class Analysis
     {
         private static string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        
         public static int[] getNumLetterOccurrences(string text)
         {
             int[] frequency = new int[26];
