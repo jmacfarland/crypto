@@ -1,0 +1,8 @@
+C:\Users\JMacfarland\crypto\bin\Debug\netcoreapp1.1\crypto.deps.json
+C:\Users\JMacfarland\crypto\bin\Debug\netcoreapp1.1\crypto.runtimeconfig.json
+C:\Users\JMacfarland\crypto\bin\Debug\netcoreapp1.1\crypto.runtimeconfig.dev.json
+C:\Users\JMacfarland\crypto\bin\Debug\netcoreapp1.1\crypto.dll
+C:\Users\JMacfarland\crypto\bin\Debug\netcoreapp1.1\crypto.pdb
+C:\Users\JMacfarland\crypto\obj\Debug\netcoreapp1.1\crypto.AssemblyInfo.cs
+C:\Users\JMacfarland\crypto\obj\Debug\netcoreapp1.1\crypto.dll
+C:\Users\JMacfarland\crypto\obj\Debug\netcoreapp1.1\crypto.pdb
