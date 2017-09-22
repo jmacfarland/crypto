@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace crypto
@@ -8,20 +10,31 @@ namespace crypto
     {
         private static string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private static string quadgramsPath = "C:\\Users\\JMacfarland\\crypto\\resources\\english_quadgrams.txt";
-        private static List<KeyValuePair<string, int>> quadgrams;
+        private List<KeyValuePair<string, int>> quadgrams;
 
         public Analysis()
         {
-            getQuadgrams();
+            quadgrams = getQuadgrams();
+
         }
 
         //Initializes the quadgrams list with key value pairs of a quadgram with its frequency
-        private void getQuadgrams()
+        private List<KeyValuePair<string, int>> getQuadgrams()
         {
+            var quads = new List<KeyValuePair<string, int>>();
+            string data;
+            string[] splitData;
+
             using (StreamReader sr = File.OpenText(quadgramsPath))
             {
-                
+                while((data = sr.ReadLine()) != null)
+                {
+                    splitData = data.Split(' ');
+                    quads.Add(new KeyValuePair<string, int>(splitData[0], int.Parse(splitData[1])));
+                }
             }
+
+            return quads;
         }
 
         public static int[] getNumLetterOccurrences(string text)
