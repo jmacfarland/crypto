@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -17,6 +18,62 @@ namespace crypto
         {
             quadgrams = parseQuadgramsFile();
 
+        }
+
+        public void breakSubstitutionCipher(string cipherText)
+        {
+            Console.WriteLine("Solving substitution cipher...");
+            Console.WriteLine("I will print my best guess to the screen. When this looks like English, hit [ESC].");
+
+            int iterationsSinceLastImprovement = 0;
+            int numToShuffleby = 3;
+
+            string key = SubstitutionCipher.generateNewKey();
+            string newKey = key;
+            string bestKey = key;
+
+            string plaintext = SubstitutionCipher.decode(cipherText, key);
+            string newPlaintext = plaintext;
+            string bestPlaintext = plaintext;
+
+            double fitness = getFitness(plaintext);
+            double newFitness = fitness;
+            double bestFitness = fitness;            
+
+            while(true)
+            {
+                iterationsSinceLastImprovement++;
+                newKey = SubstitutionCipher.shuffleNumChars(key, 2);
+                newPlaintext = SubstitutionCipher.decode(cipherText, newKey);
+                newFitness = getFitness(newPlaintext);
+
+                if(newFitness > fitness)
+                {
+                    iterationsSinceLastImprovement = 0;
+                    key = newKey;
+                    fitness = newFitness;
+                    plaintext = newPlaintext;
+                }
+
+                if(iterationsSinceLastImprovement >= 1000)
+                {
+                    if(fitness > bestFitness)
+                    {
+                        bestKey = key;
+                        bestFitness = fitness;
+                        bestPlaintext = plaintext;
+                        Console.WriteLine(bestPlaintext + " Score: " + bestFitness);
+                        numToShuffleby = 3;
+                    }
+
+                    //shuffle a greater number of chars until we see an improvement
+                    key = SubstitutionCipher.shuffleNumChars(key, numToShuffleby);
+                    numToShuffleby++;//each time 
+                    iterationsSinceLastImprovement = 0;
+                    newPlaintext = SubstitutionCipher.decode(cipherText, key);
+                    fitness = getFitness(newPlaintext);
+                }
+            }
         }
 
         public double getFitness(string text)
