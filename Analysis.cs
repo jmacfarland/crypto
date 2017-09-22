@@ -10,18 +10,77 @@ namespace crypto
     {
         private static string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private static string quadgramsPath = "C:\\Users\\JMacfarland\\crypto\\resources\\english_quadgrams.txt";
-        private List<KeyValuePair<string, int>> quadgrams;
+        private Dictionary<string, int> quadgrams;
+        private double totalQuadgrams; //total number of quadgram occurrences recorded in dictionary
 
         public Analysis()
         {
-            quadgrams = getQuadgrams();
+            quadgrams = parseQuadgramsFile();
 
         }
 
-        //Initializes the quadgrams list with key value pairs of a quadgram with its frequency
-        private List<KeyValuePair<string, int>> getQuadgrams()
+        public double getFitness(string text)
         {
-            var quads = new List<KeyValuePair<string, int>>();
+            //Get all possible quads from the text
+            char[] charArray = text.ToUpper().ToCharArray();
+            string processedText = removeSpacesAndPunctuation(charArray);
+            int numQuads = processedText.Length - 3;
+            string[] textQuads = new string[numQuads];
+
+            for(int i = 0; i < numQuads; i++)
+            {
+                textQuads[i] = processedText.Substring(i, 4);
+            }
+
+            //score the quads
+            double score = 0;
+            for(int i = 0; i < numQuads; i++)
+            {
+                score += getQuadScore(textQuads[i]);
+            }
+
+            return score;
+        }
+
+        //Get the "score" of a given quad with respect to the quadgrams dictionary
+        public double getQuadScore(string quad)
+        {
+            int n = 0;
+
+            if(quadgrams.ContainsKey(quad))
+            {
+                quadgrams.TryGetValue(quad, out n); 
+            }
+
+            if(n != 0)
+            {
+                return Math.Log10(n / totalQuadgrams);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public string removeSpacesAndPunctuation(char[] text)
+        {
+            List<char> result = new List<char>();
+
+            for(int i = 0; i < text.Length; i++)
+            {
+                if(char.IsLetter(text[i]))
+                {
+                    result.Add(text[i]);
+                }
+            }
+
+            return new string(result.ToArray());
+        }
+
+        //Initializes the quadgrams list with key value pairs of a quadgram with its frequency
+        private Dictionary<string, int> parseQuadgramsFile()
+        {
+            var quads = new Dictionary<string, int>();
             string data;
             string[] splitData;
 
@@ -30,7 +89,8 @@ namespace crypto
                 while((data = sr.ReadLine()) != null)
                 {
                     splitData = data.Split(' ');
-                    quads.Add(new KeyValuePair<string, int>(splitData[0], int.Parse(splitData[1])));
+                    quads.Add(splitData[0], int.Parse(splitData[1]));
+                    totalQuadgrams += int.Parse(splitData[1]);
                 }
             }
 
