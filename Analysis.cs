@@ -103,21 +103,15 @@ namespace crypto
         //Get the "score" of a given quad with respect to the quadgrams dictionary
         public double getQuadScore(string quad)
         {
-            int n = 0;
+            int n;
 
-            if(quadgrams.ContainsKey(quad))
-            {
-                quadgrams.TryGetValue(quad, out n); 
-            }
+            quadgrams.TryGetValue(quad, out n); 
 
             if(n != 0)
             {
                 return Math.Log10(n / totalQuadgrams);
             }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
 
         public string removeSpacesAndPunctuation(char[] text)
