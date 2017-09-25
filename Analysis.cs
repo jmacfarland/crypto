@@ -16,6 +16,7 @@ namespace crypto
 
         public Analysis()
         {
+//this should be a binary search tree instead of a Dictionary. that would be much faster to search from. 
             quadgrams = parseQuadgramsFile();
 
         }
