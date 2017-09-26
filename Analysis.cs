@@ -24,56 +24,65 @@ namespace crypto
         public void breakSubstitutionCipher(string cipherText)
         {
             Console.WriteLine("Solving substitution cipher...");
-            Console.WriteLine("I will print my best guess to the screen. When this looks like English, hit [ESC].");
+            Console.WriteLine("I will print my best guess to the screen. When this looks like English, hit [CTRL + C].\n");
 
-            int iterationsSinceLastImprovement = 0;
-            int numToShuffleby = 3;
-
+            //current
             string key = SubstitutionCipher.generateNewKey();
-            string newKey = key;
-            string bestKey = key;
-
             string plaintext = SubstitutionCipher.decode(cipherText, key);
-            string newPlaintext = plaintext;
-            string bestPlaintext = plaintext;
-
             double fitness = getFitness(plaintext);
+
+            //local best
+            string newKey = key;
+            string newPlaintext = plaintext;
             double newFitness = fitness;
+            
+            //actual best
+            string bestKey = key;
+            string bestPlaintext = plaintext;
             double bestFitness = fitness;            
 
             while(true)
             {
-                iterationsSinceLastImprovement++;
-                newKey = SubstitutionCipher.shuffleNumChars(key, 2);
-                newPlaintext = SubstitutionCipher.decode(cipherText, newKey);
-                newFitness = getFitness(newPlaintext);
-
-                if(newFitness > fitness)
+                for(int i = 0; i < 1000; i++)//i => iterations since last improvement. If > 1000, we are at local maximum
                 {
-                    iterationsSinceLastImprovement = 0;
-                    key = newKey;
-                    fitness = newFitness;
-                    plaintext = newPlaintext;
-                }
+                    newKey = SubstitutionCipher.shuffleNumChars(key, 2);
+                    newPlaintext = SubstitutionCipher.decode(cipherText, newKey);
+                    newFitness = getFitness(newPlaintext);
 
-                if(iterationsSinceLastImprovement >= 1000)
-                {
-                    if(fitness > bestFitness)
+                    if(newFitness > fitness)//if improvement, save changes
                     {
-                        bestKey = key;
-                        bestFitness = fitness;
-                        bestPlaintext = plaintext;
-                        Console.WriteLine(bestPlaintext + " Score: " + bestFitness);
-                        numToShuffleby = 3;
+                        i = 0;
+                        key = newKey;
+                        fitness = newFitness;
+                        plaintext = newPlaintext;
                     }
-
-                    //shuffle a greater number of chars until we see an improvement
-                    key = SubstitutionCipher.shuffleNumChars(key, numToShuffleby);
-                    numToShuffleby++;//each time 
-                    iterationsSinceLastImprovement = 0;
-                    newPlaintext = SubstitutionCipher.decode(cipherText, key);
-                    fitness = getFitness(newPlaintext);
+                    else //if no improvement, roll back and try swapping two other chars
+                    {
+                        newKey = key;
+                        newFitness = fitness;
+                        newPlaintext = plaintext;
+                    }
                 }
+
+                //once 1000 iterations with no improvement, check if local best is better than actual best
+                if(fitness > bestFitness)
+                {
+                    bestKey = key;
+                    bestFitness = fitness;
+                    bestPlaintext = plaintext;
+                    Console.WriteLine(bestPlaintext + "\nKey: " + key + "\n Score: " + bestFitness + "\n\n");
+                }
+
+                //finally, get an entirely new key and reset for the next try
+                //current
+                key = SubstitutionCipher.generateNewKey();
+                plaintext = SubstitutionCipher.decode(cipherText, key);
+                fitness = getFitness(plaintext);
+
+                //local best
+                newKey = key;
+                newPlaintext = plaintext;
+                newFitness = fitness;
             }
         }
 
@@ -120,7 +129,7 @@ namespace crypto
 
             for(int i = 0; i < text.Length; i++)
             {
-                if(char.IsLetter(text[i]))
+                if(isBasicLetter(text[i]))
                 {
                     result.Add(text[i]);
                 }
@@ -176,6 +185,11 @@ namespace crypto
             }
 
             return frequency;
+        }
+
+        public static bool isBasicLetter(char c)
+        {
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
         }
     }
 }

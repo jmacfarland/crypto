@@ -9,6 +9,7 @@ namespace crypto
     class SubstitutionCipher
     {
         static string plainAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        //TODO: Use a Dictionary for encoding/decoding? How hard would that be to swap two letters in?
 
         public SubstitutionCipher()
         {
