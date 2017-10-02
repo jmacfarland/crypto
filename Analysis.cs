@@ -186,6 +186,16 @@ namespace crypto
             return frequency;
         }
 
+        public static char[] cloneArray(char[] array)
+        {
+            char[] result = new char[array.Length];
+            for(int i = 0; i < array.Length; i++)
+            {
+                result[i] = array[i];
+            }
+            return result;
+        }
+
         public static bool isBasicLetter(char c)
         {
             return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
