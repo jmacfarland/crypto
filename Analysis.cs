@@ -13,7 +13,7 @@ namespace crypto
         private static string quadgramsPath = "C:\\Users\\JMacfarland\\crypto\\resources\\english_quadgrams.txt";
         private Dictionary<string, int> quadgrams;
         private double totalQuadgrams; //total number of quadgram occurrences recorded in dictionary
-
+/* 
         public Analysis()
         {
             quadgrams = parseQuadgramsFile();
@@ -200,5 +200,6 @@ namespace crypto
         {
             return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
         }
+        */
     }
 }

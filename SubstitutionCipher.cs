@@ -8,21 +8,38 @@ namespace crypto
 {
     class SubstitutionCipher
     {
-        static string plainAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private string plainAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         //TODO: Use a Dictionary for encoding/decoding? How hard would that be to swap two letters in?
+        private Random rnd;
+        private string key;
 
         public SubstitutionCipher()
         {
+            rnd = new Random();
             generateNewKey();
         }
 
-        public static string generateNewKey()
+        public string getAlphabet()
         {
-            string key = shuffle(plainAlphabet);
+            return plainAlphabet;
+        }
+
+        public string getKey()
+        {
             return key;
         }
 
-        public static string encode(string plain, string key)
+        public void setKey(string newKey)
+        {
+            key = newKey;
+        }
+
+        public void generateNewKey()
+        {
+            key = shuffle(plainAlphabet);
+        }
+
+        public string encode(string plain)
         {
             char[] text = plain.ToUpper().ToCharArray();
 
@@ -40,7 +57,7 @@ namespace crypto
             return new string(text);
         }
 
-        public static string decode(string cipher, string key)
+        public string decode(string cipher)
         {
             char[] text = cipher.ToUpper().ToCharArray();
 
@@ -59,10 +76,9 @@ namespace crypto
         }
 
         //Randomly reorders a string
-        public static string shuffle(string plain)
+        public string shuffle(string plain)
         {
             char[] plainArr = plain.ToCharArray();
-            Random rnd = new Random();
             int n = plainArr.Length;
 
             while (n > 1)
@@ -78,21 +94,17 @@ namespace crypto
 
         //Swaps two chars at random within a string
         //Change to shuffle num chars
-        public static string shuffleNumChars(string text, int num)
+        public void swapTwoCharsInKey()
         {
-            char[] arr = text.ToCharArray();
-            Random rnd = new Random();
+            char[] arr = key.ToCharArray();
 
-            for(int i = 0; i < num; i++)
-            {
-                int k = rnd.Next(arr.Length - 1);
-                int j = rnd.Next(arr.Length - 1);
-                var value = arr[k];
-                arr[k] = arr[j];
-                arr[j] = value;
-            }
+            int k = rnd.Next(arr.Length - 1);
+            int j = rnd.Next(arr.Length - 1);
+            var value = arr[k];
+            arr[k] = arr[j];
+            arr[j] = value;
 
-            return new string(arr);
+            key = new string(arr);
         }
     }
 }
