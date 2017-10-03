@@ -57,6 +57,24 @@ namespace crypto
             return new string(text);
         }
 
+        public string encode(string plain, string thisKey)
+        {
+            char[] text = plain.ToUpper().ToCharArray();
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                for (int n = 0; n < plainAlphabet.Length; n++)
+                {
+                    if (text[i] == plainAlphabet[n])
+                    {
+                        text[i] = thisKey[n];
+                        break;
+                    }
+                }
+            }
+            return new string(text);
+        }
+
         public string decode(string cipher)
         {
             char[] text = cipher.ToUpper().ToCharArray();
@@ -66,6 +84,24 @@ namespace crypto
                 for (int n = 0; n < plainAlphabet.Length; n++)
                 {
                     if (text[i] == key[n])
+                    {
+                        text[i] = plainAlphabet[n];
+                        break;
+                    }
+                }
+            }
+            return new string(text);
+        }
+
+        public string decode(string cipher, string thisKey)
+        {
+            char[] text = cipher.ToUpper().ToCharArray();
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                for (int n = 0; n < plainAlphabet.Length; n++)
+                {
+                    if (text[i] == thisKey[n])
                     {
                         text[i] = plainAlphabet[n];
                         break;

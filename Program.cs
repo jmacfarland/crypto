@@ -12,8 +12,8 @@ namespace crypto
             string newPlain = sb.decode(cipherText);
 
             Console.WriteLine("Plain: " + plainText + "\nCipher: " + cipherText + "\nDecoded: " + newPlain);
-            //Analysis analysis = new Analysis();
-            //analysis.breakSubstitutionCipher(cipherText);
+            Analysis analysis = new Analysis();
+            analysis.breakSubstitutionCipher(cipherText);
         }
     }
 }
