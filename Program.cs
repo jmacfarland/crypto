@@ -12,7 +12,7 @@ namespace crypto
             string cipherText = sb.encode(plainText, key);
             string newPlain = sb.decode(cipherText, key);
 
-            Console.WriteLine("Plain: " + plainText + "\nCipher: " + cipherText + "\nDecoded: " + newPlain);
+            Console.WriteLine("Key: " + key + "\nCipher: " + cipherText);
             Analysis analysis = new Analysis();
             analysis.breakSubstitutionCipher(cipherText);
         }

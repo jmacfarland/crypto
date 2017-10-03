@@ -11,8 +11,9 @@ namespace crypto
     {
         private static string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private static string quadgramsPath = "C:\\Users\\JMacfarland\\crypto\\resources\\english_quadgrams.txt";
-        private Dictionary<string, int> quadgrams;
-        private double totalQuadgrams; //total number of quadgram occurrences recorded in dictionary
+        private Dictionary<string, double> quadgrams;
+        private long totalQuadgrams = 4224127912; //total number of quadgram occurrences recorded in dictionary
+        private double worstScore = -11;
         private SubstitutionCipher sb;
 
         public Analysis()
@@ -91,15 +92,15 @@ namespace crypto
         //Get the "score" of a given quad with respect to the quadgrams dictionary
         public double getQuadScore(string quad)
         {
-            int n;
+            double n;
 
             quadgrams.TryGetValue(quad, out n); 
 
             if(n != 0)
             {
-                return Math.Log10(n / totalQuadgrams);
+                return n;
             }
-            return 0;
+            return worstScore;
         }
 
         public string removeSpacesAndPunctuation(char[] text)
@@ -118,9 +119,9 @@ namespace crypto
         }
 
         //Initializes the quadgrams list with key value pairs of a quadgram with its frequency
-        private Dictionary<string, int> parseQuadgramsFile()
+        private Dictionary<string, double> parseQuadgramsFile()
         {
-            var quads = new Dictionary<string, int>();
+            var quads = new Dictionary<string, double>();
             string data;
             string[] splitData;
 
@@ -129,8 +130,8 @@ namespace crypto
                 while((data = sr.ReadLine()) != null)
                 {
                     splitData = data.Split(' ');
-                    quads.Add(splitData[0], int.Parse(splitData[1]));
-                    totalQuadgrams += int.Parse(splitData[1]);
+                    double value = Math.Log10(double.Parse(splitData[1]) / totalQuadgrams);
+                    quads.Add(splitData[0], value);
                 }
             }
 
