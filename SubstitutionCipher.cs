@@ -9,14 +9,11 @@ namespace crypto
     class SubstitutionCipher
     {
         private string plainAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        //TODO: Use a Dictionary for encoding/decoding? How hard would that be to swap two letters in?
         private Random rnd;
-        private string key;
 
         public SubstitutionCipher()
         {
             rnd = new Random();
-            generateNewKey();
         }
 
         public string getAlphabet()
@@ -24,22 +21,12 @@ namespace crypto
             return plainAlphabet;
         }
 
-        public string getKey()
+        public string generateNewKey()
         {
-            return key;
+            return shuffle(plainAlphabet);
         }
 
-        public void setKey(string newKey)
-        {
-            key = newKey;
-        }
-
-        public void generateNewKey()
-        {
-            key = shuffle(plainAlphabet);
-        }
-
-        public string encode(string plain)
+        public string encode(string plain, string key)
         {
             char[] text = plain.ToUpper().ToCharArray();
 
@@ -57,25 +44,7 @@ namespace crypto
             return new string(text);
         }
 
-        public string encode(string plain, string thisKey)
-        {
-            char[] text = plain.ToUpper().ToCharArray();
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                for (int n = 0; n < plainAlphabet.Length; n++)
-                {
-                    if (text[i] == plainAlphabet[n])
-                    {
-                        text[i] = thisKey[n];
-                        break;
-                    }
-                }
-            }
-            return new string(text);
-        }
-
-        public string decode(string cipher)
+        public string decode(string cipher, string key)
         {
             char[] text = cipher.ToUpper().ToCharArray();
 
@@ -84,24 +53,6 @@ namespace crypto
                 for (int n = 0; n < plainAlphabet.Length; n++)
                 {
                     if (text[i] == key[n])
-                    {
-                        text[i] = plainAlphabet[n];
-                        break;
-                    }
-                }
-            }
-            return new string(text);
-        }
-
-        public string decode(string cipher, string thisKey)
-        {
-            char[] text = cipher.ToUpper().ToCharArray();
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                for (int n = 0; n < plainAlphabet.Length; n++)
-                {
-                    if (text[i] == thisKey[n])
                     {
                         text[i] = plainAlphabet[n];
                         break;
@@ -130,7 +81,7 @@ namespace crypto
 
         //Swaps two chars at random within a string
         //Change to shuffle num chars
-        public void swapTwoCharsInKey()
+        public string swapTwoChars(string key)
         {
             char[] arr = key.ToCharArray();
 
@@ -140,7 +91,7 @@ namespace crypto
             arr[k] = arr[j];
             arr[j] = value;
 
-            key = new string(arr);
+            return new string(arr);
         }
     }
 }
