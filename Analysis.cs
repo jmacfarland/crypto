@@ -41,7 +41,7 @@ namespace crypto
                 parentKey = sb.generateNewKey();
                 parentScore = getFitness(sb.decode(cipherText, parentKey));
 
-                for(int i = 0; i < 10000; i++)//i => iterations since last improvement. If > 1000, we are at local maximum
+                for(int i = 0; i < 1000; i++)//i => iterations since last improvement. If > 1000, we are at local maximum
                 {
                     string childKey = sb.swapTwoChars(parentKey);
                     double childScore = getFitness(sb.decode(cipherText, childKey));
@@ -59,7 +59,7 @@ namespace crypto
                     maxScore = parentScore;
                     maxKey = parentKey;
 
-                    Console.WriteLine("\nBest score so far: " + maxScore);
+                    Console.WriteLine("\nBest score so far: " + maxScore + " on iteration " + count);
                     Console.WriteLine("     Best key: " + maxKey);
                     Console.WriteLine("     Best Plaintext: " + sb.decode(cipherText, maxKey));
                 }
