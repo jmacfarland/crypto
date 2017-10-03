@@ -37,14 +37,31 @@ namespace crypto
             while(true)
             {
                 count++;
-                sb.generateNewKey();
-                for(int i = 0; i < 1000; i++)//i => iterations since last improvement. If > 1000, we are at local maximum
+                parentKey = sb.generateNewKey();
+                parentScore = getFitness(sb.decode(cipherText, parentKey));
+
+                for(int i = 0; i < 10000; i++)//i => iterations since last improvement. If > 1000, we are at local maximum
                 {
-                    
-                    
+                    string childKey = sb.swapTwoChars(parentKey);
+                    double childScore = getFitness(sb.decode(cipherText, childKey));
+
+                    if(childScore > parentScore)
+                    {
+                        parentScore = childScore;
+                        parentKey = childKey;
+                        i = 0;//made an improvement, reset counter
+                    }
                 }
 
-                
+                if(parentScore > maxScore)
+                {
+                    maxScore = parentScore;
+                    maxKey = parentKey;
+
+                    Console.WriteLine("\nBest score so far: " + maxScore);
+                    Console.WriteLine("     Best key: " + maxKey);
+                    Console.WriteLine("     Best Plaintext: " + sb.decode(cipherText, maxKey));
+                }
             }
         }
 
