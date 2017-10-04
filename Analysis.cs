@@ -10,22 +10,23 @@ namespace crypto
     class Analysis
     {
         private static string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        private static string quadgramsPath = "C:\\Users\\JMacfarland\\crypto\\resources\\english_quadgrams.txt";
-        private Dictionary<string, double> quadgrams;
-        private long totalQuadgrams = 4224127912; //total number of quadgram occurrences recorded in dictionary
+        private static string NgramFilePath = "C:\\Users\\JMacfarland\\crypto\\resources\\english_quadgrams.txt";
+        private Dictionary<string, double> NgramsDictionary;
+        private long totalNgrams = 4224127912; //total number of ngram occurrences recorded in dictionary
         private double worstScore = -11;
         private SubstitutionCipher sb;
 
         public Analysis()
         {
             sb = new SubstitutionCipher();
-            quadgrams = parseQuadgramsFile();
+            NgramsDictionary = parseNgramsFile();
         }
 
         public void breakSubstitutionCipher(string cipherText)
         {
             Console.WriteLine("Solving substitution cipher...");
             Console.WriteLine("I will print my best guess to the screen. When this looks like English, hit [CTRL + C].\n");
+            Console.WriteLine("\nInitial score: " + getTextNgramFitness(cipherText));
 
             //current
             int count = 0;
@@ -39,12 +40,12 @@ namespace crypto
             {
                 count++;
                 parentKey = sb.generateNewKey();
-                parentScore = getFitness(sb.decode(cipherText, parentKey));
+                parentScore = getTextNgramFitness(sb.decode(cipherText, parentKey));
 
                 for(int i = 0; i < 1000; i++)//i => iterations since last improvement. If > 1000, we are at local maximum
                 {
                     string childKey = sb.swapTwoChars(parentKey);
-                    double childScore = getFitness(sb.decode(cipherText, childKey));
+                    double childScore = getTextNgramFitness(sb.decode(cipherText, childKey));
 
                     if(childScore > parentScore)
                     {
@@ -66,35 +67,35 @@ namespace crypto
             }
         }
 
-        public double getFitness(string text)
+        public double getTextNgramFitness(string text)
         {
-            //Get all possible quads from the text
+            //Get all possible nGrams from the text
             char[] charArray = text.ToUpper().ToCharArray();
             string processedText = Utils.RemoveSpacesAndPunctuation(charArray);
-            int numQuads = processedText.Length - 3;
-            string[] textQuads = new string[numQuads];
+            int numNgrams = processedText.Length - 3;
+            string[] textNgrams = new string[numNgrams];
 
-            for(int i = 0; i < numQuads; i++)
+            for(int i = 0; i < numNgrams; i++)
             {
-                textQuads[i] = processedText.Substring(i, 4);
+                textNgrams[i] = processedText.Substring(i, 4);
             }
 
-            //score the quads
+            //score the ngrams
             double score = 0;
-            for(int i = 0; i < numQuads; i++)
+            for(int i = 0; i < numNgrams; i++)
             {
-                score += getQuadScore(textQuads[i]);
+                score += getNgramScore(textNgrams[i]);
             }
 
             return score;
         }
 
-        //Get the "score" of a given quad with respect to the quadgrams dictionary
-        public double getQuadScore(string quad)
+        //Get the "score" of a given nGram with respect to the NgramsDictionary dictionary
+        public double getNgramScore(string nGram)
         {
             double n;
 
-            quadgrams.TryGetValue(quad, out n); 
+            NgramsDictionary.TryGetValue(nGram, out n); 
 
             if(n != 0)
             {
@@ -103,24 +104,24 @@ namespace crypto
             return worstScore;
         }
 
-        //Initializes the quadgrams list with key value pairs of a quadgram with its frequency
-        private Dictionary<string, double> parseQuadgramsFile()
+        //Initializes the NgramsDictionary list with key value pairs of a nGramgram with its frequency
+        private Dictionary<string, double> parseNgramsFile()
         {
-            var quads = new Dictionary<string, double>();
+            var ngrams = new Dictionary<string, double>();
             string data;
             string[] splitData;
 
-            using (StreamReader sr = File.OpenText(quadgramsPath))
+            using (StreamReader sr = File.OpenText(NgramFilePath))
             {
                 while((data = sr.ReadLine()) != null)
                 {
                     splitData = data.Split(' ');
-                    double value = Math.Log10(double.Parse(splitData[1]) / totalQuadgrams);
-                    quads.Add(splitData[0], value);
+                    double value = Math.Log10(double.Parse(splitData[1]) / totalNgrams);
+                    ngrams.Add(splitData[0], value);
                 }
             }
 
-            return quads;
+            return ngrams;
         }
 
         public static int[] getNumLetterOccurrences(string text)
