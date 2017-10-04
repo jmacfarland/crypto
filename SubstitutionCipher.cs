@@ -26,6 +26,19 @@ namespace crypto
             return Utils.ShuffleString(plainAlphabet, rnd);
         }
 
+        //for generating Caesar shift keys
+        public string generateNewShiftKey(int shift)
+        {
+            char[] newKey = new char[26];
+
+            for(int i = 0; i < 26; i++)
+            {
+                newKey[(i + shift) % 26] = plainAlphabet[i];
+            }
+
+            return new string(newKey);
+        }
+
         public string encode(string plain, string key)
         {
             char[] text = plain.ToUpper().ToCharArray();

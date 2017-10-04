@@ -70,8 +70,7 @@ namespace crypto
         public double getTextNgramFitness(string text)
         {
             //Get all possible nGrams from the text
-            char[] charArray = text.ToUpper().ToCharArray();
-            string processedText = Utils.RemoveSpacesAndPunctuation(charArray);
+            string processedText = Utils.RemoveSpacesAndPunctuation(text.ToUpper());
             int numNgrams = processedText.Length - 3;
             string[] textNgrams = new string[numNgrams];
 

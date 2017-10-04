@@ -9,7 +9,22 @@ namespace crypto
 {
     class Utils
     {
-        public static string RemoveSpacesAndPunctuation(char[] text)
+        public static char[] RemoveSpacesAndPunctuation(char[] text)
+        {
+            List<char> result = new List<char>();
+
+            for(int i = 0; i < text.Length; i++)
+            {
+                if(IsBasicLetter(text[i]))
+                {
+                    result.Add(text[i]);
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        public static string RemoveSpacesAndPunctuation(string text)
         {
             List<char> result = new List<char>();
 
