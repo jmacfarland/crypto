@@ -70,7 +70,7 @@ namespace crypto
         {
             //Get all possible quads from the text
             char[] charArray = text.ToUpper().ToCharArray();
-            string processedText = removeSpacesAndPunctuation(charArray);
+            string processedText = Utils.RemoveSpacesAndPunctuation(charArray);
             int numQuads = processedText.Length - 3;
             string[] textQuads = new string[numQuads];
 
@@ -101,21 +101,6 @@ namespace crypto
                 return n;
             }
             return worstScore;
-        }
-
-        public string removeSpacesAndPunctuation(char[] text)
-        {
-            List<char> result = new List<char>();
-
-            for(int i = 0; i < text.Length; i++)
-            {
-                if(isBasicLetter(text[i]))
-                {
-                    result.Add(text[i]);
-                }
-            }
-
-            return new string(result.ToArray());
         }
 
         //Initializes the quadgrams list with key value pairs of a quadgram with its frequency
@@ -165,21 +150,6 @@ namespace crypto
             }
 
             return frequency;
-        }
-
-        public static char[] cloneArray(char[] array)
-        {
-            char[] result = new char[array.Length];
-            for(int i = 0; i < array.Length; i++)
-            {
-                result[i] = array[i];
-            }
-            return result;
-        }
-
-        public static bool isBasicLetter(char c)
-        {
-            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
         }
     }
 }

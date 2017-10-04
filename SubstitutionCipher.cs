@@ -23,7 +23,7 @@ namespace crypto
 
         public string generateNewKey()
         {
-            return shuffle(plainAlphabet);
+            return Utils.ShuffleString(plainAlphabet, rnd);
         }
 
         public string encode(string plain, string key)
@@ -62,22 +62,6 @@ namespace crypto
             return new string(text);
         }
 
-        //Randomly reorders a string
-        public string shuffle(string plain)
-        {
-            char[] plainArr = plain.ToCharArray();
-            int n = plainArr.Length;
-
-            while (n > 1)
-            {
-                n--;
-                int k = rnd.Next(n + 1);
-                var value = plainArr[k];
-                plainArr[k] = plainArr[n];
-                plainArr[n] = value;
-            }
-            return new string(plainArr);
-        }
 
         //Swaps two chars at random within a string
         //Change to shuffle num chars
