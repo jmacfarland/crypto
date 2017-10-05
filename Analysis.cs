@@ -10,20 +10,27 @@ namespace crypto
     class Analysis
     {
         private static string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        private static string NgramFilePath = "C:\\Users\\JMacfarland\\crypto\\resources\\english_quadgrams.txt";
+        private static string filePath = "C:\\Users\\JMacfarland\\crypto\\resources\\";
         private Dictionary<string, double> NgramsDictionary;
-        private long totalNgrams = 4224127912; //total number of ngram occurrences recorded in dictionary
+        private int NgramLength;
+        private long totalNgrams = 0; //total number of ngram occurrences recorded in dictionary
         private double worstScore = -11;
         private SubstitutionCipher sb;
 
-        public Analysis()
+        public Analysis(int NgramLengthInit)
         {
             sb = new SubstitutionCipher();
+            NgramLength = NgramLengthInit;
             NgramsDictionary = parseNgramsFile();
         }
 
         public void breakSubstitutionCipher(string cipherText)
         {
+            if(NgramLength != 1 && NgramLength != 2 && NgramLength != 3 && NgramLength != 4 && NgramLength != 5) 
+            {
+                return;
+            }
+
             Console.WriteLine("Solving substitution cipher...");
             Console.WriteLine("I will print my best guess to the screen. When this looks like English, hit [CTRL + C].\n");
             Console.WriteLine("\nInitial score: " + getTextNgramFitness(cipherText));
@@ -71,12 +78,12 @@ namespace crypto
         {
             //Get all possible nGrams from the text
             string processedText = Utils.RemoveSpacesAndPunctuation(text.ToUpper());
-            int numNgrams = processedText.Length - 3;
+            int numNgrams = processedText.Length - NgramLength - 1;
             string[] textNgrams = new string[numNgrams];
 
             for(int i = 0; i < numNgrams; i++)
             {
-                textNgrams[i] = processedText.Substring(i, 4);
+                textNgrams[i] = processedText.Substring(i, NgramLength);
             }
 
             //score the ngrams
@@ -109,8 +116,42 @@ namespace crypto
             var ngrams = new Dictionary<string, double>();
             string data;
             string[] splitData;
+            string fileName = "";
 
-            using (StreamReader sr = File.OpenText(NgramFilePath))
+            switch(NgramLength)
+            {
+                case 1:
+                    fileName = "english_monograms.txt";
+                    Console.WriteLine("Ngram analysis with NgramLength of 1 doesn't work very well...");
+                    break;
+                case 2:
+                    fileName = "english_bigrams.txt";
+                    break;
+                case 3:
+                    fileName = "english_trigrams.txt";
+                    break;
+                case 4:
+                    fileName = "english_quadgrams.txt";
+                    break;
+                case 5:
+                    fileName = "english_quintgrams.txt";
+                    break;
+                default:
+                    Console.WriteLine("Ngram length of " + NgramLength + " not supported.");
+                    return null;
+            }
+
+            //Get total Ngram occurrences
+            using (StreamReader sr = File.OpenText(filePath + fileName))
+            {
+                while((data = sr.ReadLine()) != null)
+                {
+                    splitData = data.Split(' ');
+                    totalNgrams += long.Parse(splitData[1]);
+                }
+            }
+
+            using (StreamReader sr = File.OpenText(filePath + fileName))
             {
                 while((data = sr.ReadLine()) != null)
                 {
