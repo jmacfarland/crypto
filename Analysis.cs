@@ -30,7 +30,7 @@ namespace crypto
 
             //current
             int count = 0;
-            string maxKey = sb.getAlphabet();
+            string maxKey = SubstitutionCipher.getAlphabet();
             double maxScore = -99e9;
 
             string parentKey = maxKey;

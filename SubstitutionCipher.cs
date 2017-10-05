@@ -8,7 +8,7 @@ namespace crypto
 {
     class SubstitutionCipher
     {
-        private string plainAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private static string plainAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private Random rnd;
 
         public SubstitutionCipher()
@@ -16,7 +16,7 @@ namespace crypto
             rnd = new Random();
         }
 
-        public string getAlphabet()
+        public static string getAlphabet()
         {
             return plainAlphabet;
         }

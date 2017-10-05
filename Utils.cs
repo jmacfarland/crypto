@@ -9,6 +9,8 @@ namespace crypto
 {
     class Utils
     {
+        private static string plainAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
         public static char[] RemoveSpacesAndPunctuation(char[] text)
         {
             List<char> result = new List<char>();
@@ -87,6 +89,11 @@ namespace crypto
                 plainArr[n] = value;
             }
             return new string(plainArr);
+        }
+
+        public static string getAlphabet()
+        {
+            return plainAlphabet;
         }
     }
 }
