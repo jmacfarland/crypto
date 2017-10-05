@@ -22,6 +22,7 @@ namespace crypto
             sb = new SubstitutionCipher();
             NgramLength = NgramLengthInit;
             NgramsDictionary = parseNgramsFile();
+            worstScore = Math.Log10(0.01 / totalNgrams);
         }
 
         public void breakSubstitutionCipher(string cipherText)
