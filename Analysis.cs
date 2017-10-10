@@ -10,7 +10,8 @@ namespace crypto
     class Analysis
     {
         private static string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        private static string filePath = "C:\\Users\\JMacfarland\\crypto\\resources\\";
+        private static string filePath = "";
+	FileInfo file;
         private Dictionary<string, double> NgramsDictionary;
         private int NgramLength;
         private long totalNgrams = 0; //total number of ngram occurrences recorded in dictionary
@@ -117,33 +118,35 @@ namespace crypto
             var ngrams = new Dictionary<string, double>();
             string data;
             string[] splitData;
-            string fileName = "";
+            string fileName = "resources/";
 
             switch(NgramLength)
             {
                 case 1:
-                    fileName = "english_monograms.txt";
+                    fileName += "english_monograms.txt";
                     Console.WriteLine("Ngram analysis with NgramLength of 1 doesn't work very well...");
                     break;
                 case 2:
-                    fileName = "english_bigrams.txt";
+                    fileName += "english_bigrams.txt";
                     break;
                 case 3:
-                    fileName = "english_trigrams.txt";
+                    fileName += "english_trigrams.txt";
                     break;
                 case 4:
-                    fileName = "english_quadgrams.txt";
+                    fileName += "english_quadgrams.txt";
                     break;
                 case 5:
-                    fileName = "english_quintgrams.txt";
+                    fileName += "english_quintgrams.txt";
                     break;
                 default:
                     Console.WriteLine("Ngram length of " + NgramLength + " not supported.");
                     return null;
             }
 
+	    file = new FileInfo(fileName);
+
             //Get total Ngram occurrences
-            using (StreamReader sr = File.OpenText(filePath + fileName))
+            using (StreamReader sr = File.OpenText(file.FullName))
             {
                 while((data = sr.ReadLine()) != null)
                 {
