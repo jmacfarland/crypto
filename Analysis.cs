@@ -13,29 +13,24 @@ namespace crypto
         private static string filePath = "C:\\Users\\JMacfarland\\crypto\\resources\\";
         private Dictionary<string, double> NgramsDictionary;
         private int NgramLength;
+        private int timeout;
         private long totalNgrams = 0; //total number of ngram occurrences recorded in dictionary
         private double worstScore = -11;
         private SubstitutionCipher sb;
 
-        public Analysis(int NgramLengthInit)
+        public Analysis(int NgramLengthInit, int timeout = 10)
         {
             sb = new SubstitutionCipher();
             NgramLength = NgramLengthInit;
             NgramsDictionary = parseNgramsFile();
             worstScore = Math.Log10(0.01 / totalNgrams);
+
+            if(timeout > 30) this.timeout = 10;
+            else this.timeout = timeout;
         }
 
-        public void breakSubstitutionCipher(string cipherText)
+        public string breakSubstitutionCipher(string cipherText)
         {
-            if(NgramLength != 1 && NgramLength != 2 && NgramLength != 3 && NgramLength != 4 && NgramLength != 5) 
-            {
-                return;
-            }
-
-            Console.WriteLine("Solving substitution cipher...");
-            Console.WriteLine("I will print my best guess to the screen. When this looks like English, hit [CTRL + C].\n");
-            Console.WriteLine("\nInitial score: " + getTextNgramFitness(cipherText));
-
             //current
             int count = 0;
             string maxKey = SubstitutionCipher.getAlphabet();
@@ -44,7 +39,8 @@ namespace crypto
             string parentKey = maxKey;
             double parentScore = maxScore;
 
-            while(true)
+            DateTime start = DateTime.Now;
+            while(DateTime.Now.Subtract(start).Seconds <= timeout)
             {
                 count++;
                 parentKey = sb.generateNewKey();
@@ -73,6 +69,8 @@ namespace crypto
                     Console.WriteLine("     Best Plaintext: " + sb.decode(cipherText, maxKey));
                 }
             }
+
+            return maxKey;
         }
 
         public double getTextNgramFitness(string text)
